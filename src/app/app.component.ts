@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
+import { element } from 'protractor';
 
-declare var wgxpath:any;
-declare var document:any;
+declare var wgxpath: any;
+declare var document: any;
 
 wgxpath.install()
 
@@ -20,7 +21,7 @@ export class AppComponent implements OnInit {
 	xmlPath: string = 'assets/books.xml';
 	xml: XMLDocument;
 
-	input: string = '/bookstore/book/title'
+	input: string = '/bookstore/book[1]'
 	input$ = new Subject<string>();
 	showResult = [];
 
@@ -44,13 +45,25 @@ export class AppComponent implements OnInit {
 		let xml = this.xml;
 		let nodes
 		try {
-			 nodes= document.evaluate(this.input, xml, null, XPathResult.ANY_TYPE, null);
-		}catch(err){
+			nodes = document.evaluate(this.input, xml, null, XPathResult.ANY_TYPE, null);
+		} catch (err) {
 			console.error(err);
 		}
 		let result = nodes.iterateNext();
 		while (result) {
-			this.showResult.push(result.childNodes[0].nodeValue)
+			let childValue = [];
+			if (result.childNodes) {
+				console.log(result.childNodes)
+				result.childNodes.forEach(element => {
+
+					let innerHtml =  element.innerHTML;
+					let nodeValue = element.nodeValue;
+					if(innerHtml){childValue.push(`${element.nodeName}: ${innerHtml}`)}
+					if(nodeValue && nodeValue.trim().length >0){childValue.push(`${element.nodeName}: ${nodeValue}`)}
+				});
+			}
+
+			this.showResult.push(childValue)
 			result = nodes.iterateNext()
 		}
 	}

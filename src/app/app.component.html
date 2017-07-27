@@ -18,13 +18,15 @@
 			</div>
 			<div class="card-action">
 				<a class="waves-effect waves-light btn" (click)="evalXML()">Search</a>
-				<a class="waves-effect waves-light btn" (click)="input=''">Reset</a>
+				<a class="waves-effect waves-light btn" (click)="input='/bookstore/book/title'">Reset</a>
 			</div>
 		</div>
 
 		<div class="card" style="width:70%; margin:20px auto" *ngFor="let result of showResult">
 			<div class="card-content">
-				{{result}}
+				<p *ngFor="let item of result">
+					{{item}}
+				</p>
 			</div>
 		</div>
 	</div>
